@@ -3,20 +3,22 @@ import path from 'path';
 import type { ContactFormValues } from '@/schema/contact';
 import { formatContactSubmission } from '@/lib/notifications/format-submission';
 import { isEmailConfigured, sendContactEmail } from '@/lib/notifications/send-email';
-import { isWhatsAppConfigured, sendContactWhatsApp } from '@/lib/notifications/send-whatsapp';
 
 const SUBMISSIONS_DIR = path.join(process.cwd(), 'submissions');
 const SUBMISSIONS_FILE = path.join(SUBMISSIONS_DIR, 'contact-submissions.json');
 
 export type NotifyResult = {
   emailSent: boolean;
-  whatsappSent: boolean;
   savedLocally: boolean;
 };
 
 async function saveSubmissionLocally(
   submission: ContactFormValues & { id: string; ip: string; submittedAt: string },
 ): Promise<boolean> {
+  if (process.env.NODE_ENV === 'production') {
+    return false;
+  }
+
   try {
     await fs.mkdir(SUBMISSIONS_DIR, { recursive: true });
 
@@ -38,7 +40,7 @@ async function saveSubmissionLocally(
 }
 
 export function isNotificationConfigured(): boolean {
-  return isEmailConfigured() || isWhatsAppConfigured();
+  return isEmailConfigured();
 }
 
 export async function notifyOwner(
@@ -47,15 +49,8 @@ export async function notifyOwner(
 ): Promise<NotifyResult> {
   const formatted = formatContactSubmission(data, meta);
 
-  const [emailResult, whatsappResult] = await Promise.allSettled([
-    sendContactEmail(formatted),
-    sendContactWhatsApp(formatted.whatsappText),
-  ]);
-
-  const emailSent = emailResult.status === 'fulfilled' && emailResult.value;
-  const whatsappSent = whatsappResult.status === 'fulfilled' && whatsappResult.value;
-
+  const emailSent = await sendContactEmail(formatted);
   const savedLocally = await saveSubmissionLocally({ ...data, ...meta });
 
-  return { emailSent, whatsappSent, savedLocally };
+  return { emailSent, savedLocally };
 }

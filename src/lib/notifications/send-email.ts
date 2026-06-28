@@ -6,6 +6,48 @@ function getNotifyEmail(): string {
   return process.env.CONTACT_NOTIFY_EMAIL || siteConfig.email;
 }
 
+function getSmtpConfig() {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!user || !pass) return null;
+
+  return {
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: process.env.SMTP_SECURE === 'true',
+    user,
+    pass,
+    from: process.env.SMTP_FROM || `"NeoNode Web Solution" <${user}>`,
+  };
+}
+
+async function sendViaSmtp(formatted: FormattedSubmission): Promise<boolean> {
+  const config = getSmtpConfig();
+  if (!config) return false;
+
+  const transporter = nodemailer.createTransport({
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    auth: {
+      user: config.user,
+      pass: config.pass,
+    },
+  });
+
+  await transporter.sendMail({
+    from: config.from,
+    to: getNotifyEmail(),
+    replyTo: formatted.replyTo,
+    subject: formatted.subject,
+    text: formatted.text,
+    html: formatted.html,
+  });
+
+  return true;
+}
+
 async function sendViaResend(formatted: FormattedSubmission): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return false;
@@ -30,48 +72,22 @@ async function sendViaResend(formatted: FormattedSubmission): Promise<boolean> {
   });
 
   if (!response.ok) {
-    const error = await response.text();
-    console.error('Resend email failed:', error);
+    console.error('Resend email failed:', await response.text());
     return false;
   }
 
   return true;
 }
 
-async function sendViaSmtp(formatted: FormattedSubmission): Promise<boolean> {
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return false;
-
-  const transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: Number(SMTP_PORT) || 587,
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: {
-      user: SMTP_USER,
-      pass: SMTP_PASS,
-    },
-  });
-
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM || `"NeoNode Web Solution" <${SMTP_USER}>`,
-    to: getNotifyEmail(),
-    replyTo: formatted.replyTo,
-    subject: formatted.subject,
-    text: formatted.text,
-    html: formatted.html,
-  });
-
-  return true;
-}
-
 export async function sendContactEmail(formatted: FormattedSubmission): Promise<boolean> {
   try {
-    if (process.env.RESEND_API_KEY) {
-      return await sendViaResend(formatted);
+    // Gmail SMTP first (same as PHPMailer with app password)
+    if (getSmtpConfig()) {
+      return await sendViaSmtp(formatted);
     }
 
-    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-      return await sendViaSmtp(formatted);
+    if (process.env.RESEND_API_KEY) {
+      return await sendViaResend(formatted);
     }
 
     return false;
@@ -82,8 +98,5 @@ export async function sendContactEmail(formatted: FormattedSubmission): Promise<
 }
 
 export function isEmailConfigured(): boolean {
-  return Boolean(
-    process.env.RESEND_API_KEY ||
-      (process.env.SMTP_USER && process.env.SMTP_PASS),
-  );
+  return Boolean(getSmtpConfig() || process.env.RESEND_API_KEY);
 }

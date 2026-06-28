@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { contactFormSchema } from '@/schema/contact';
 import { siteConfig } from '@/config/site';
-import { notifyOwner } from '@/lib/notifications/notify';
+import { isNotificationConfigured, notifyOwner } from '@/lib/notifications/notify';
 
 const MAX_BODY_BYTES = 50_000;
 const RATE_LIMIT = Number(process.env.CONTACT_RATE_LIMIT) || 10;
@@ -75,10 +75,41 @@ export async function POST(request: Request) {
       submittedAt: new Date().toISOString(),
     };
 
-    // Save locally + optional email/WhatsApp if env vars are set later
-    await notifyOwner(parsed.data, meta);
+    if (!isNotificationConfigured() && process.env.NODE_ENV === 'production') {
+      console.error('Contact form: Gmail SMTP not configured');
+      return NextResponse.json(
+        {
+          error: 'Contact form email is not configured. Please email us directly.',
+          fallbackEmail: siteConfig.email,
+        },
+        { status: 503 },
+      );
+    }
 
-    console.info('[Contact form]', meta.id, parsed.data.name, parsed.data.email, parsed.data.company);
+    const { emailSent, savedLocally } = await notifyOwner(parsed.data, meta);
+
+    if (isNotificationConfigured() && !emailSent) {
+      console.error('[Contact form] Email failed for', meta.id);
+      return NextResponse.json(
+        {
+          error: 'Failed to send your inquiry. Please email us directly.',
+          fallbackEmail: siteConfig.email,
+        },
+        { status: 500 },
+      );
+    }
+
+    if (!emailSent && !savedLocally) {
+      return NextResponse.json(
+        {
+          error: 'Failed to save inquiry. Please email us directly.',
+          fallbackEmail: siteConfig.email,
+        },
+        { status: 500 },
+      );
+    }
+
+    console.info('[Contact form]', meta.id, parsed.data.name, parsed.data.email, emailSent ? 'emailed' : 'saved locally');
 
     return NextResponse.json({
       success: true,
@@ -88,9 +119,8 @@ export async function POST(request: Request) {
     console.error('Contact form error:', error);
     return NextResponse.json(
       {
-        error: 'Something went wrong. Please email or WhatsApp us directly.',
+        error: 'Something went wrong. Please email us directly.',
         fallbackEmail: siteConfig.email,
-        fallbackWhatsApp: siteConfig.whatsappUrl,
       },
       { status: 500 },
     );
