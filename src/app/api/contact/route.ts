@@ -3,6 +3,8 @@ import { contactFormSchema } from '@/schema/contact';
 import { siteConfig } from '@/config/site';
 import { isNotificationConfigured, notifyOwner } from '@/lib/notifications/notify';
 
+export const runtime = 'nodejs';
+
 const MAX_BODY_BYTES = 50_000;
 const RATE_LIMIT = Number(process.env.CONTACT_RATE_LIMIT) || 10;
 const RATE_WINDOW_MS = 60 * 60 * 1000;
