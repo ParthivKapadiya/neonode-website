@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { contactFormSchema } from '@/schema/contact';
 import { siteConfig } from '@/config/site';
-import { isNotificationConfigured, notifyOwner } from '@/lib/notifications/notify';
+import { notifyOwner } from '@/lib/notifications/notify';
+import { getEmailConfigStatus } from '@/lib/notifications/send-email';
 
 export const runtime = 'nodejs';
 
@@ -77,21 +78,10 @@ export async function POST(request: Request) {
       submittedAt: new Date().toISOString(),
     };
 
-    if (!isNotificationConfigured() && process.env.NODE_ENV === 'production') {
-      console.error('Contact form: Gmail SMTP not configured');
-      return NextResponse.json(
-        {
-          error: 'Contact form email is not configured. Please email us directly.',
-          fallbackEmail: siteConfig.email,
-        },
-        { status: 503 },
-      );
-    }
+    const { emailSent, savedLocally, method } = await notifyOwner(parsed.data, meta);
 
-    const { emailSent, savedLocally } = await notifyOwner(parsed.data, meta);
-
-    if (isNotificationConfigured() && !emailSent) {
-      console.error('[Contact form] Email failed for', meta.id);
+    if (!emailSent && !savedLocally) {
+      console.error('[Contact form] All delivery methods failed for', meta.id);
       return NextResponse.json(
         {
           error: 'Failed to send your inquiry. Please email us directly.',
@@ -101,17 +91,13 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!emailSent && !savedLocally) {
-      return NextResponse.json(
-        {
-          error: 'Failed to save inquiry. Please email us directly.',
-          fallbackEmail: siteConfig.email,
-        },
-        { status: 500 },
-      );
-    }
-
-    console.info('[Contact form]', meta.id, parsed.data.name, parsed.data.email, emailSent ? 'emailed' : 'saved locally');
+    console.info(
+      '[Contact form]',
+      meta.id,
+      parsed.data.name,
+      parsed.data.email,
+      emailSent ? `sent via ${method}` : 'saved locally',
+    );
 
     return NextResponse.json({
       success: true,
@@ -127,4 +113,13 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
+}
+
+export async function GET() {
+  const status = getEmailConfigStatus();
+  return NextResponse.json({
+    ...status,
+    formsubmitFallback: !status.configured,
+    notifyEmail: status.notifyEmail,
+  });
 }

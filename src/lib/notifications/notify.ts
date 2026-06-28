@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import type { ContactFormValues } from '@/schema/contact';
 import { formatContactSubmission } from '@/lib/notifications/format-submission';
-import { isEmailConfigured, sendContactEmail } from '@/lib/notifications/send-email';
+import { getEmailConfigStatus, sendContactEmail } from '@/lib/notifications/send-email';
 
 const SUBMISSIONS_DIR = path.join(process.cwd(), 'submissions');
 const SUBMISSIONS_FILE = path.join(SUBMISSIONS_DIR, 'contact-submissions.json');
@@ -10,6 +10,7 @@ const SUBMISSIONS_FILE = path.join(SUBMISSIONS_DIR, 'contact-submissions.json');
 export type NotifyResult = {
   emailSent: boolean;
   savedLocally: boolean;
+  method?: 'smtp' | 'resend' | 'formsubmit' | 'local';
 };
 
 async function saveSubmissionLocally(
@@ -40,7 +41,7 @@ async function saveSubmissionLocally(
 }
 
 export function isNotificationConfigured(): boolean {
-  return isEmailConfigured();
+  return getEmailConfigStatus().configured;
 }
 
 export async function notifyOwner(
@@ -48,9 +49,17 @@ export async function notifyOwner(
   meta: { id: string; ip: string; submittedAt: string },
 ): Promise<NotifyResult> {
   const formatted = formatContactSubmission(data, meta);
-
-  const emailSent = await sendContactEmail(formatted);
+  const emailSent = await sendContactEmail(formatted, data, meta);
   const savedLocally = await saveSubmissionLocally({ ...data, ...meta });
 
-  return { emailSent, savedLocally };
+  let method: NotifyResult['method'] = 'formsubmit';
+  if (getEmailConfigStatus().smtpUser && getEmailConfigStatus().smtpPass) {
+    method = 'smtp';
+  } else if (process.env.RESEND_API_KEY) {
+    method = 'resend';
+  } else if (savedLocally && !emailSent) {
+    method = 'local';
+  }
+
+  return { emailSent, savedLocally, method };
 }
