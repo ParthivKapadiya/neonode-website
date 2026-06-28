@@ -1,0 +1,15 @@
+export { HeroSection } from './HeroSection';
+export { TrustedSection } from './TrustedSection';
+export { ServicesSection } from './ServicesSection';
+export { BeforeAfterSection } from './BeforeAfterSection';
+export { WhyChooseSection } from './WhyChooseSection';
+export { PortfolioSection } from './PortfolioSection';
+export { ProcessSection } from './ProcessSection';
+export { PricingEstimatorSection } from './PricingEstimatorSection';
+export { TechnologiesSection } from './TechnologiesSection';
+export { GuaranteeSection } from './GuaranteeSection';
+export { StatisticsSection } from './StatisticsSection';
+export { TestimonialsSection } from './TestimonialsSection';
+export { FAQSection } from './FAQSection';
+export { HomeContactSection } from './HomeContactSection';
+export { HomeFooter } from './HomeFooter';

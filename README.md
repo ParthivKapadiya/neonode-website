@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NeoNode Web Solution
+
+Official production website for **NeoNode Web Solution** — a premium web development agency.
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- React 19 + TypeScript
+- Tailwind CSS v4
+- Framer Motion
+- React Hook Form + Zod
+- Lucide React
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+| `npm run format` | Format with Prettier |
 
-## Learn More
+## Pages
 
-To learn more about Next.js, take a look at the following resources:
+- `/` — Homepage with all marketing sections
+- `/about` — About the agency
+- `/services` — Full services listing
+- `/portfolio` — Project showcase with filters
+- `/portfolio/[slug]` — Project detail
+- `/process` — Development process
+- `/pricing` — Pricing packages
+- `/faq` — Frequently asked questions
+- `/contact` — Contact form
+- `/blog` — Blog listing
+- `/blog/[slug]` — Blog article
+- `/privacy` — Privacy policy
+- `/terms` — Terms of service
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/              # Next.js App Router pages
+├── components/
+│   ├── animations/   # Framer Motion primitives
+│   ├── layout/       # Header, Footer, global UI
+│   ├── sections/     # Page sections (Hero, FAQ, etc.)
+│   └── ui/           # Reusable UI components
+├── config/           # Site configuration
+├── data/             # Static content data
+├── hooks/            # Custom React hooks
+├── lib/              # Utilities, metadata, structured data
+├── schema/           # Zod validation schemas
+└── types/            # TypeScript types
+```
 
-## Deploy on Vercel
+## Configuration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Update site details in `src/config/site.ts` (URL, email, phone, social links).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+Private — NeoNode Web Solution. All rights reserved.
