@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, Mail, MessageCircle, Phone, Send, Shield } from 'lucide-react';
+import { CheckCircle, Clock, Mail, Send, Shield } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { siteConfig } from '@/config/site';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
 import { budgetOptions } from '@/data/content';
@@ -77,13 +78,14 @@ export function HomeContactSection() {
       href: `mailto:${siteConfig.email}`,
     },
     {
-      icon: Phone,
+      icon: WhatsAppIcon,
       label: 'Phone / WhatsApp',
       value: siteConfig.phone,
       href: whatsappUrl,
+      iconClassName: 'text-[#25D366]',
     },
     {
-      icon: MessageCircle,
+      icon: Clock,
       label: 'Response time',
       value: siteConfig.businessHours.response,
       href: undefined,
@@ -340,15 +342,17 @@ function ContactCardContent({
   icon: Icon,
   label,
   value,
+  iconClassName,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string;
+  iconClassName?: string;
 }) {
   return (
     <>
       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary">
-        <Icon className="h-5 w-5" />
+        <Icon className={cn('h-5 w-5', iconClassName)} />
       </div>
       <div>
         <p className="text-xs text-muted">{label}</p>

@@ -9,17 +9,18 @@ import {
   Globe,
   Mail,
   MapPin,
-  MessageCircle,
   Phone,
   Share2,
 } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { footerLinks, siteConfig } from '@/config/site';
+import { cn } from '@/lib/utils';
 import { AnimatedLogo } from '@/components/home/shared/AnimatedLogo';
 import { homeNavSections } from '@/data/home';
 
 const socialLinks = [
   { icon: Share2, href: siteConfig.social.instagram, label: 'Instagram' },
-  { icon: MessageCircle, href: siteConfig.social.whatsapp, label: 'WhatsApp' },
+  { icon: WhatsAppIcon, href: siteConfig.social.whatsapp, label: 'WhatsApp', iconClassName: 'text-[#25D366]' },
   { icon: Globe, href: siteConfig.social.linkedin, label: 'LinkedIn' },
 ];
 
@@ -52,7 +53,7 @@ export function HomeFooter() {
             </p>
 
             <div className="mt-6 flex gap-3">
-              {socialLinks.map(({ icon: Icon, href, label }) => (
+              {socialLinks.map(({ icon: Icon, href, label, iconClassName }) => (
                 <a
                   key={label}
                   href={href}
@@ -61,7 +62,7 @@ export function HomeFooter() {
                   aria-label={label}
                   className="flex h-10 w-10 items-center justify-center rounded-xl border border-border text-muted transition-all hover:border-primary/40 hover:text-white"
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className={cn('h-4 w-4', iconClassName)} />
                 </a>
               ))}
             </div>

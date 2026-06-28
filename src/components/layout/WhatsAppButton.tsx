@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MessageCircle } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -22,7 +22,7 @@ export function WhatsAppButton() {
       whileTap={reduced ? undefined : { scale: 0.96 }}
       aria-label="Contact NeoNode on WhatsApp"
     >
-      <MessageCircle className="h-6 w-6" aria-hidden="true" />
+      <WhatsAppIcon className="h-7 w-7" />
     </motion.a>
   );
 }

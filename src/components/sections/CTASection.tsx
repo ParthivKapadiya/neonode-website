@@ -1,6 +1,7 @@
 'use client';
 
-import { ArrowRight, MessageCircle } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { siteConfig } from '@/config/site';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
 import { Button } from '@/components/ui/Button';
@@ -34,7 +35,7 @@ export function CTASection() {
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Button>
                 <Button href={whatsappUrl} variant="outline" size="lg" className="w-full sm:w-auto">
-                  <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                  <WhatsAppIcon className="h-4 w-4" />
                   WhatsApp Us
                 </Button>
               </div>
