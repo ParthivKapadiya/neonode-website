@@ -12,6 +12,7 @@ import { budgetOptions } from '@/data/content';
 import { industryOptions, timelineOptions } from '@/data/home';
 import { serviceOptions } from '@/data/services';
 import { contactFormSchema, type ContactFormValues } from '@/schema/contact';
+import { submitContactInquiry } from '@/lib/contact/submit-contact';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -48,26 +49,16 @@ export function HomeContactSection() {
   const onSubmit = async (data: ContactFormValues) => {
     setSubmitError(null);
 
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+    const result = await submitContactInquiry(data);
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        setSubmitError(result.error || 'Failed to send message');
-        return;
-      }
-
-      setSubmitted(true);
-      reset();
-      setTimeout(() => setSubmitted(false), 8000);
-    } catch {
-      setSubmitError('Network error. Please try again or contact us on WhatsApp.');
+    if (!result.success) {
+      setSubmitError(result.error);
+      return;
     }
+
+    setSubmitted(true);
+    reset();
+    setTimeout(() => setSubmitted(false), 8000);
   };
 
   const contactItems = [

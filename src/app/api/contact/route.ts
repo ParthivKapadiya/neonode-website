@@ -120,6 +120,7 @@ export async function GET() {
   return NextResponse.json({
     ...status,
     formsubmitFallback: !status.configured,
+    clientFormSubmit: !status.configured,
     notifyEmail: status.notifyEmail,
   });
 }
