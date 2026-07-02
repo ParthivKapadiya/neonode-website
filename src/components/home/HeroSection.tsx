@@ -4,7 +4,7 @@ import { useScroll, useTransform, motion, useSpring } from 'framer-motion';
 import { useRef } from 'react';
 import { HeroInteractiveBackground } from './hero/HeroInteractiveBackground';
 import { HeroCopyColumn } from './hero/HeroCopyColumn';
-import { HeroBuildCanvas } from './hero/build-canvas/HeroBuildCanvas';
+import { HeroSearchSimulator } from './hero/HeroSearchSimulator';
 import { HeroScrollIndicator } from './hero/HeroScrollIndicator';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -46,7 +46,7 @@ export function HeroSection() {
             className="order-2 lg:order-none"
             style={{ y: visualY, scale: visualScale }}
           >
-            <HeroBuildCanvas />
+            <HeroSearchSimulator />
           </motion.div>
         </div>
       </div>
