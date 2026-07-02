@@ -2,31 +2,35 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight, LayoutGrid, MessageCircle } from 'lucide-react';
 import { useMagneticEffect } from '@/hooks/useMagneticEffect';
+import { EASE_OUT } from '@/lib/motion';
+import { siteConfig } from '@/config/site';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
 
 function PrimaryButton({ href, children }: { href: string; children: React.ReactNode }) {
-  const { ref, handleMouseMove, handleMouseLeave } = useMagneticEffect(0.35);
+  const { ref, handleMouseMove, handleMouseLeave } = useMagneticEffect(0.3);
 
   return (
-    <Link href={href} className="group relative inline-flex">
+    <Link href={href} className="group relative inline-flex w-full sm:w-auto">
       <motion.span
         ref={ref as React.RefObject<HTMLSpanElement>}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className={cn(
-          'relative flex items-center gap-2 overflow-hidden rounded-xl px-8 py-4 text-base font-semibold text-white',
-          'bg-gradient-to-r from-primary to-secondary shadow-xl shadow-primary/30',
-          'transition-shadow duration-300 group-hover:shadow-primary/50',
+          'relative flex w-full items-center justify-center gap-2.5 overflow-hidden rounded-xl px-7 py-3.5',
+          'text-[0.9375rem] font-semibold text-white sm:w-auto sm:px-8 sm:py-4 sm:text-base',
+          'bg-gradient-to-r from-primary to-secondary shadow-lg shadow-primary/25',
+          'transition-shadow duration-300 group-hover:shadow-xl group-hover:shadow-primary/35',
         )}
-        whileTap={{ scale: 0.97 }}
+        whileTap={{ scale: 0.98 }}
         style={{ transition: 'transform 0.25s ease-out' }}
       >
-        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
         <span className="relative flex items-center gap-2">
           {children}
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
         </span>
       </motion.span>
     </Link>
@@ -35,17 +39,17 @@ function PrimaryButton({ href, children }: { href: string; children: React.React
 
 function SecondaryButton({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="group relative inline-flex">
+    <Link href={href} className="group relative inline-flex w-full sm:w-auto">
       <motion.span
         className={cn(
-          'flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-8 py-4',
-          'text-base font-semibold text-white backdrop-blur-md',
-          'transition-all duration-300 group-hover:border-white/30 group-hover:bg-white/[0.08]',
+          'flex w-full items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.03] px-7 py-3.5',
+          'text-[0.9375rem] font-semibold text-white/90 backdrop-blur-sm sm:w-auto sm:px-8 sm:py-4 sm:text-base',
+          'transition-all duration-300 group-hover:border-white/22 group-hover:bg-white/[0.06] group-hover:text-white',
         )}
         whileHover={{ y: -2 }}
-        whileTap={{ scale: 0.97 }}
+        whileTap={{ scale: 0.98 }}
       >
-        <Play className="h-4 w-4 fill-white/80 text-white/80" />
+        <LayoutGrid className="h-4 w-4 text-white/50 transition-colors group-hover:text-white/70" />
         {children}
       </motion.span>
     </Link>
@@ -53,15 +57,32 @@ function SecondaryButton({ href, children }: { href: string; children: React.Rea
 }
 
 export function HeroButtons() {
+  const reduced = useReducedMotion();
+
   return (
     <motion.div
-      className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center"
-      initial={{ opacity: 0, y: 24 }}
+      className="mt-8 sm:mt-9"
+      initial={reduced ? false : { opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.75, duration: 0.6 }}
+      transition={{ duration: 0.55, delay: reduced ? 0 : 0.56, ease: EASE_OUT }}
     >
-      <PrimaryButton href="#contact">Get a Free Quote</PrimaryButton>
-      <SecondaryButton href="#portfolio">See Live Projects</SecondaryButton>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <PrimaryButton href="#contact">Get a Free Quote</PrimaryButton>
+        <SecondaryButton href="#portfolio">See Live Work</SecondaryButton>
+      </div>
+
+      <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+        <span>Prefer WhatsApp?</span>
+        <a
+          href={siteConfig.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 font-medium text-emerald-400/90 transition-colors hover:text-emerald-400"
+        >
+          <MessageCircle className="h-3.5 w-3.5" />
+          Message us directly
+        </a>
+      </p>
     </motion.div>
   );
 }
