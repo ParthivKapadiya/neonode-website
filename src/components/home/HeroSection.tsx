@@ -1,6 +1,6 @@
 'use client';
 
-import { useScroll, useTransform, motion } from 'framer-motion';
+import { useScroll, useTransform, motion, useSpring } from 'framer-motion';
 import { useRef } from 'react';
 import { HeroInteractiveBackground } from './hero/HeroInteractiveBackground';
 import { HeroHeadline } from './hero/HeroHeadline';
@@ -23,10 +23,16 @@ export function HeroSection() {
     offset: ['start start', 'end start'],
   });
 
-  const copyY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 80]);
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.6], [1, reduced ? 1 : 0.3]);
-  const mockupY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : -40]);
-  const mockupScale = useTransform(scrollYProgress, [0, 0.5], [1, reduced ? 1 : 0.95]);
+  const smoothScroll = useSpring(scrollYProgress, {
+    stiffness: 300,
+    damping: 40,
+    restDelta: 0.001,
+  });
+
+  const copyY = useTransform(smoothScroll, [0, 1], [0, reduced ? 0 : 80]);
+  const copyOpacity = useTransform(smoothScroll, [0, 0.6], [1, reduced ? 1 : 0.3]);
+  const mockupY = useTransform(smoothScroll, [0, 1], [0, reduced ? 0 : -40]);
+  const mockupScale = useTransform(smoothScroll, [0, 0.5], [1, reduced ? 1 : 0.95]);
 
   return (
     <section ref={ref} className="relative flex min-h-[100dvh] items-center overflow-hidden">

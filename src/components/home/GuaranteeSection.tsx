@@ -12,7 +12,7 @@ import {
 
 export function GuaranteeSection() {
   return (
-    <SectionTransition className="section-padding overflow-hidden">
+    <SectionTransition className="section-padding section-padding-compact overflow-hidden">
       <div className="container-custom">
         <SectionReveal
           label="Our Guarantee"

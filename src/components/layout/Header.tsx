@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { navLinks, siteConfig } from '@/config/site';
@@ -11,6 +11,7 @@ import { useScrolled } from '@/hooks/useScrolled';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { AnimatedLogo } from '@/components/home/shared/AnimatedLogo';
+import { EASE_OUT } from '@/lib/motion';
 
 function isActive(pathname: string, href: string) {
   if (href.startsWith('#')) return false;
@@ -20,6 +21,8 @@ function isActive(pathname: string, href: string) {
 
 export function Header() {
   const scrolled = useScrolled(20);
+  const prevScrolled = useRef(scrolled);
+  const [transitionMs, setTransitionMs] = useState(300);
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const isHome = pathname === '/';
@@ -27,6 +30,13 @@ export function Header() {
   const links = isHome
     ? homeNavSections.map((s) => ({ href: `#${s.id}`, label: s.label }))
     : [...navLinks];
+
+  useEffect(() => {
+    if (scrolled !== prevScrolled.current) {
+      setTransitionMs(scrolled ? 200 : 350);
+      prevScrolled.current = scrolled;
+    }
+  }, [scrolled]);
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
@@ -38,11 +48,12 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 right-0 left-0 z-50 transition-all duration-300',
+        'fixed top-0 right-0 left-0 z-50 transition-all',
         scrolled
           ? 'border-b border-white/5 bg-[#050505]/85 py-3 shadow-lg shadow-black/20 backdrop-blur-xl'
           : 'bg-transparent py-4 md:py-5',
       )}
+      style={{ transitionDuration: `${transitionMs}ms` }}
     >
       <div className="container-custom flex items-center justify-between gap-4">
         <Link href="/" className="group shrink-0" aria-label={`${siteConfig.name} home`}>
@@ -97,7 +108,7 @@ export function Header() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18, ease: [0.21, 0.47, 0.32, 0.98] }}
+            transition={{ duration: 0.18, ease: EASE_OUT }}
           >
             <nav className="container-custom flex flex-col gap-1 py-4" aria-label="Mobile navigation">
               {links.map((link) => (

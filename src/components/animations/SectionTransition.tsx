@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { fadeUpVariants, defaultTransition, VIEWPORT_DEFAULT } from '@/lib/motion';
+import { fadeUpVariants, defaultTransition, VIEWPORT_DEFAULT, VIEWPORT_SECTION } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
 interface SectionTransitionProps {
@@ -29,7 +29,7 @@ export function SectionTransition({ children, id, className, parallax }: Section
       className={cn('relative', className)}
       initial="hidden"
       whileInView="visible"
-      viewport={VIEWPORT_DEFAULT}
+      viewport={VIEWPORT_SECTION}
       variants={{
         hidden: { opacity: 0 },
         visible: {
@@ -44,7 +44,7 @@ export function SectionTransition({ children, id, className, parallax }: Section
             className="absolute -top-20 right-1/4 h-64 w-64 rounded-full bg-primary/5 blur-[80px]"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={VIEWPORT_DEFAULT}
+            viewport={VIEWPORT_SECTION}
             transition={{ duration: 1 }}
           />
         </div>
@@ -125,7 +125,7 @@ export function SectionReveal({
       )}
       initial="hidden"
       whileInView="visible"
-      viewport={VIEWPORT_DEFAULT}
+      viewport={VIEWPORT_SECTION}
       variants={{
         hidden: {},
         visible: { transition: { staggerChildren: 0.08 } },

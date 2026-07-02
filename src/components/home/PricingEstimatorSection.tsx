@@ -61,7 +61,7 @@ export function PricingEstimatorSection() {
   };
 
   return (
-    <SectionTransition className="section-padding bg-surface/30 overflow-hidden">
+    <SectionTransition className="section-padding section-padding-spacious bg-surface/30 overflow-hidden">
       <div className="container-custom">
         <SectionReveal
           label="Pricing Estimator"

@@ -72,6 +72,13 @@ p {
   outline-offset: 2px;
 }
 
+button:focus-visible,
+a.rounded-xl:focus-visible,
+a.rounded-full:focus-visible,
+[role="button"]:focus-visible {
+  outline-offset: 4px;
+}
+
 .gradient-text {
   background: linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%);
   -webkit-background-clip: text;
@@ -126,6 +133,16 @@ p {
   .section-padding {
     padding-top: 8rem;
     padding-bottom: 8rem;
+  }
+
+  .section-padding-compact {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+
+  .section-padding-spacious {
+    padding-top: 9rem;
+    padding-bottom: 9rem;
   }
 }
 

@@ -20,7 +20,7 @@ export function MagneticLink({
   strength = 0.3,
 }: MagneticLinkProps) {
   const reduced = useReducedMotion();
-  const { ref, handleMouseMove, handleMouseLeave } = useMagneticEffect(strength);
+  const { ref, x, y, handleMouseMove, handleMouseLeave } = useMagneticEffect(strength);
 
   if (reduced) {
     return (
@@ -37,8 +37,8 @@ export function MagneticLink({
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className={cn('inline-flex', className)}
+        style={{ x, y }}
         whileTap={{ scale: 0.97 }}
-        style={{ transition: 'transform 0.2s ease-out' }}
       >
         {children}
       </motion.span>

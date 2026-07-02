@@ -4,22 +4,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { BrandMark } from '@/components/ui/BrandMark';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { EASE_OUT, LOADING_HOLD_MS } from '@/lib/motion';
 
-const SESSION_KEY = 'neonode-loaded';
+const LOADING_HOLD_S = LOADING_HOLD_MS / 1000;
 
 export function LoadingScreen() {
   const reduced = useReducedMotion();
   const [isLoading, setIsLoading] = useState(
-    () => !reduced && sessionStorage.getItem(SESSION_KEY) !== '1',
+    () => !reduced && sessionStorage.getItem('neonode-loaded') !== '1',
   );
 
   useEffect(() => {
     if (!isLoading) return;
 
     const timer = setTimeout(() => {
-      sessionStorage.setItem(SESSION_KEY, '1');
+      sessionStorage.setItem('neonode-loaded', '1');
       setIsLoading(false);
-    }, 900);
+    }, LOADING_HOLD_MS);
 
     return () => clearTimeout(timer);
   }, [isLoading]);
@@ -31,7 +32,7 @@ export function LoadingScreen() {
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
+          transition={{ duration: 0.4, ease: EASE_OUT }}
           role="status"
           aria-label="Loading"
         >
@@ -39,7 +40,7 @@ export function LoadingScreen() {
             className="relative mb-6"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.45, ease: 'easeOut' }}
+            transition={{ duration: 0.45, ease: EASE_OUT }}
           >
             <BrandMark size={96} />
           </motion.div>
@@ -49,7 +50,7 @@ export function LoadingScreen() {
               className="h-full bg-gradient-to-r from-primary to-secondary"
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
-              transition={{ duration: 0.75, ease: 'easeInOut' }}
+              transition={{ duration: LOADING_HOLD_S, ease: EASE_OUT }}
             />
           </div>
         </motion.div>

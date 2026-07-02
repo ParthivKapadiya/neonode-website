@@ -17,30 +17,52 @@ import {
 import { ProjectPreviewMockup, ProjectPreviewHover } from '@/components/home/ProjectPreviewMockup';
 import { motion, AnimatePresence } from 'framer-motion';
 
+/** Must be a static string so Tailwind can detect the arbitrary easing utility. */
+const SITE_EASE = 'ease-[cubic-bezier(0.21,0.47,0.32,0.98)]';
+
 function PortfolioCard({ project }: { project: PortfolioProject }) {
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-border bg-card/50 transition-all duration-500 hover:-translate-y-2 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5">
+    <article
+      className={cn(
+        'group relative overflow-hidden rounded-3xl border border-border bg-card/50 transition-all duration-500 hover:-translate-y-2 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5',
+        SITE_EASE,
+      )}
+    >
       <div className="relative aspect-[16/10] overflow-hidden">
-        {/* Base gradient layer */}
         <div
           className={cn(
             'absolute inset-0 bg-gradient-to-br transition-all duration-700 group-hover:scale-110 group-hover:opacity-0',
+            SITE_EASE,
             project.gradient,
           )}
         />
 
-        {/* Realistic preview — fades in on hover */}
-        <div className="absolute inset-0 scale-105 opacity-100 transition-all duration-700 group-hover:scale-100">
+        <div
+          className={cn(
+            'absolute inset-0 scale-105 opacity-100 transition-all duration-700 group-hover:scale-100',
+            SITE_EASE,
+          )}
+        >
           <div className="absolute inset-0 p-4 md:p-6">
             <ProjectPreviewMockup project={project} />
           </div>
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
+        <div
+          className={cn(
+            'absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity duration-500 group-hover:opacity-90',
+            SITE_EASE,
+          )}
+        />
 
         <ProjectPreviewHover project={project} />
 
-        <div className="relative z-[5] flex h-full flex-col justify-between p-6 md:p-8 transition-opacity duration-300 group-hover:opacity-0">
+        <div
+          className={cn(
+            'relative z-[5] flex h-full flex-col justify-between p-6 md:p-8 transition-opacity duration-300 group-hover:opacity-0',
+            SITE_EASE,
+          )}
+        >
           <div className="flex flex-wrap gap-2">
             <span
               className="w-fit rounded-full border border-white/15 px-3 py-1 text-xs font-medium text-white backdrop-blur-md"
@@ -68,7 +90,10 @@ function PortfolioCard({ project }: { project: PortfolioProject }) {
             href={project.websiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute top-6 right-6 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 group-hover:scale-110"
+            className={cn(
+              'absolute top-6 right-6 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 group-hover:scale-110',
+              SITE_EASE,
+            )}
             aria-label={`Visit ${project.title}`}
           >
             <ExternalLink className="h-4 w-4 text-white" />
@@ -103,7 +128,10 @@ function PortfolioCard({ project }: { project: PortfolioProject }) {
         </div>
         <Link
           href={`/portfolio/${project.slug}`}
-          className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className={cn(
+            'mt-5 inline-flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100',
+            SITE_EASE,
+          )}
         >
           View case study <ArrowUpRight className="h-4 w-4" />
         </Link>
@@ -123,7 +151,7 @@ export function PortfolioSection() {
   const hasProjects = filtered.length > 0;
 
   return (
-    <SectionTransition id="portfolio" className="section-padding overflow-hidden" parallax>
+    <SectionTransition id="portfolio" className="section-padding section-padding-spacious overflow-hidden" parallax>
       <ParallaxLayer speed={0.2} />
       <div className="container-custom relative">
         <div className="mb-12 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">

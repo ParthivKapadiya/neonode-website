@@ -1,7 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
+import { hoverLift } from '@/lib/motion';
 
 interface CardProps {
   children: React.ReactNode;
@@ -11,6 +13,8 @@ interface CardProps {
 }
 
 export function Card({ children, className, hover = true, glass = true }: CardProps) {
+  const reduced = useReducedMotion();
+
   return (
     <motion.div
       className={cn(
@@ -19,7 +23,7 @@ export function Card({ children, className, hover = true, glass = true }: CardPr
         !glass && 'bg-card border border-border',
         className,
       )}
-      whileHover={hover ? { y: -4, transition: { duration: 0.3 } } : undefined}
+      whileHover={hover && !reduced ? hoverLift : undefined}
     >
       {children}
     </motion.div>

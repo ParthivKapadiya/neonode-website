@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
+import { EASE_OUT } from '@/lib/motion';
 import { faqItems } from '@/data/content';
 import { cn } from '@/lib/utils';
 import {
@@ -18,7 +19,7 @@ export function FAQSection() {
   const items = faqItems.slice(0, 6);
 
   return (
-    <SectionTransition id="faq" className="section-padding bg-surface/30">
+    <SectionTransition id="faq" className="section-padding section-padding-compact bg-surface/30">
       <div className="container-custom">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           <FadeIn direction="left" className="lg:sticky lg:top-28 lg:self-start">
@@ -80,7 +81,7 @@ export function FAQSection() {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.28, ease: [0.21, 0.47, 0.32, 0.98] }}
+                          transition={{ duration: 0.28, ease: EASE_OUT }}
                         >
                           <p className="px-5 pb-5 text-sm leading-relaxed text-muted md:px-6 md:pb-6">
                             {item.answer}

@@ -1,6 +1,12 @@
 export const EASE_OUT = [0.21, 0.47, 0.32, 0.98] as const;
 
+export const EASE_OUT_CSS = 'cubic-bezier(0.21, 0.47, 0.32, 0.98)';
+
 export const VIEWPORT_DEFAULT = { once: true, margin: '-60px' as const };
+
+export const VIEWPORT_SECTION = { once: true, margin: '-140px' as const };
+
+export const LOADING_HOLD_MS = 900;
 
 export const fadeUpVariants = {
   hidden: { opacity: 0, y: 18 },

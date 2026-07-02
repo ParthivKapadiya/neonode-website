@@ -170,14 +170,14 @@ export const beforeAfterMetrics = {
 };
 
 export const pricingEstimatorDefaults = {
-  basePrice: 1500,
-  pagePrice: 250,
+  basePrice: 4000,
+  pagePrice: 650,
   featurePrices: {
-    cms: 400,
-    ecommerce: 1200,
-    booking: 600,
-    multilingual: 500,
-    animations: 350,
-    seo: 300,
+    cms: 1000,
+    ecommerce: 3000,
+    booking: 1500,
+    multilingual: 1200,
+    animations: 850,
+    seo: 750,
   },
 };

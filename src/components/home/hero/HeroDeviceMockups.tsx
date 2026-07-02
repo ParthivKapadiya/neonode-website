@@ -2,6 +2,7 @@
 
 import { motion, useSpring } from 'framer-motion';
 import { useEffect } from 'react';
+import { EASE_OUT } from '@/lib/motion';
 import { useMousePosition } from '@/hooks/useMousePosition';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { HeroFloatingCards } from './HeroFloatingElements';
@@ -116,7 +117,7 @@ export function HeroDeviceMockups() {
       className="relative mx-auto w-full max-w-xl lg:max-w-none"
       initial={{ opacity: 0, y: 60 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4, duration: 0.9, ease: [0.21, 0.47, 0.32, 0.98] }}
+      transition={{ delay: 0.4, duration: 0.9, ease: EASE_OUT }}
       style={{ perspective: 1200 }}
     >
       <HeroFloatingCards />

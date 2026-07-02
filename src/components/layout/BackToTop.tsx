@@ -4,11 +4,23 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 
+const SHOW_THRESHOLD = 500;
+const HIDE_THRESHOLD = 400;
+
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setVisible(window.scrollY > 500);
+    const handleScroll = () => {
+      const y = window.scrollY;
+      setVisible((prev) => {
+        if (!prev && y > SHOW_THRESHOLD) return true;
+        if (prev && y < HIDE_THRESHOLD) return false;
+        return prev;
+      });
+    };
+
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

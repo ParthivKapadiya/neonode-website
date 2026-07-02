@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+import { EASE_OUT } from '@/lib/motion';
 import { AnimatedLogo } from '@/components/home/shared/AnimatedLogo';
 
 const lines: { words: string[]; gradientFrom?: number }[] = [
@@ -67,7 +68,7 @@ export function HeroHeadline() {
                 transition={{
                   delay,
                   duration: 0.65,
-                  ease: [0.21, 0.47, 0.32, 0.98],
+                  ease: EASE_OUT,
                 }}
               >
                 {word}

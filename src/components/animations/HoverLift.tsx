@@ -22,7 +22,6 @@ export function HoverLift({ children, className, intensity = 'medium' }: HoverLi
     <motion.div
       className={className}
       whileHover={intensity === 'subtle' ? hoverLift : cardHover}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
     >
       {children}
     </motion.div>
@@ -44,10 +43,10 @@ export function AnimatedCard({ children, className }: AnimatedCardProps) {
   return (
     <motion.div
       className={cn(
-        'group relative overflow-hidden rounded-2xl border border-border bg-card/50 transition-colors duration-300 hover:border-primary/25 hover:shadow-lg hover:shadow-primary/5',
+        'group relative overflow-hidden rounded-2xl border border-border bg-card/50 transition-[colors,box-shadow] duration-300 hover:border-primary/25 hover:shadow-lg hover:shadow-primary/5',
         className,
       )}
-      whileHover={{ y: -6, transition: { duration: 0.25 } }}
+      whileHover={cardHover}
     >
       <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
       <div className="relative">{children}</div>
